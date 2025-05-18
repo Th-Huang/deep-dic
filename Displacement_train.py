@@ -13,7 +13,9 @@ def executeEpoch(epoch, loss_func, fcn, optimizer, train_loader, test_loader, wr
 
     dataString = datetime.strftime(datetime.now(), '%Y_%m_%d_%H_%M_%S')
 
-    root_result = ''
+    root_result = '../output/'
+    if not os.path.exists(root_result):
+        os.mkdir(root_result)
 
     model_result = root_result + 'model/'
     log_result = root_result + 'log/'
@@ -82,7 +84,7 @@ def train():
     fnet = FeatureResNet()
     fcn = SegResNet(2, fnet)
     fcn = fcn.cuda()
-    dataset_path = ''
+    dataset_path = '../DIC-dataset/'
 
     test_set = []
     for i in range(4000):
@@ -114,8 +116,8 @@ def train():
     test_data = MyDataset(dataset=test_set)
     test_loader = data_utils.DataLoader(dataset=test_data, batch_size=1)
 
-    expPath = 'runs/'
-    writer = SummaryWriter('runs/Displacement_train')
+    expPath = '../output/runs/Dicplacement_train'
+    writer = SummaryWriter(expPath)
 
     executeEpoch(EPOCH, loss_func, fcn, optimizer, train_loader, test_loader, writer,mode='train')
 
