@@ -4,8 +4,8 @@ import torch.nn as nn
 from torch.autograd import Variable
 import torch.utils.data as data_utils
 import os
-from model import FeatureResNet, SegResNet
-from mydataset import MyDataset
+from DisplacementNet import FeatureResNet, SegResNet
+from DisplacementDataset import MyDataset
 from datetime import datetime
 from torch.utils.tensorboard import SummaryWriter
 
