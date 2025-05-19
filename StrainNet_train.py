@@ -31,11 +31,7 @@ from torchvision import models, transforms
 import torch.utils.data as data_utils
 from PIL import Image
 import os
-import scipy.io as sio
 
-import cv2
-import matplotlib.pyplot as plt
-import torch.nn.functional as F
 def default_loader(path):
     return Image.open(path)
 
@@ -121,7 +117,7 @@ class SegResNet(nn.Module):
         x = self.relu(self.bnadd(self.convadd(x)))
         x = self.conv10(x)
         return x
->>>>>>> f8364a0c145a6b7f4c6c68b34e3bc4648a05c53e
+
 fnet = FeatureResNet()
 fcn = SegResNet(4,fnet)
 fcn = fcn.cuda()
@@ -139,20 +135,15 @@ for z in range(16000):
     train_set.append((dataset_path+'imgs3/train_image_'+str(z+1)+'_1.png',
                        dataset_path+'imgs3/train_image_'+str(z+1)+'_2.png',
                        dataset_path+'gt3/train_image_'+str(z+1)+'.mat'))
-<<<<<<< HEAD
 
-=======
 import scipy.io as sio
 from scipy import interpolate
->>>>>>> f8364a0c145a6b7f4c6c68b34e3bc4648a05c53e
+
 x = np.arange(0,256,1)
 y = np.arange(0,256,1)
 xnew = np.arange(1.5,257.5,4)
 ynew = np.arange(1.5,257.5,4)
 
-<<<<<<< HEAD
-
-=======
 class MyDataset(data_utils.Dataset):
     def __init__(self, dataset, transform=None, target_transform=None, loader=default_loader):
         self.imgs = dataset
@@ -193,7 +184,7 @@ class MyDataset(data_utils.Dataset):
 
     def __len__(self):
         return len(self.imgs)
->>>>>>> f8364a0c145a6b7f4c6c68b34e3bc4648a05c53e
+
 EPOCH = 100              # train the training data n times, to save time, we just train 100 epoch
 BATCH_SIZE = 12
 print('BATCH_SIZE = ',BATCH_SIZE)
