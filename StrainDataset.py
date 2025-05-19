@@ -4,11 +4,16 @@ from torchvision.transforms import ToTensor
 import scipy.io as sio
 import numpy as np
 from scipy import interpolate
+from PIL import Image
 
 x = np.arange(0,256,1)
 y = np.arange(0,256,1)
 xnew = np.arange(1.5,257.5,4)
 ynew = np.arange(1.5,257.5,4)
+
+
+def default_loader(path):
+    return Image.open(path)
 
 class MyDataset(data_utils.Dataset):
     def __init__(self, dataset, transform=None, target_transform=None, loader=default_loader):

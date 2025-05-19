@@ -1,10 +1,6 @@
 import torch.nn as nn
 from torch.nn import init
 from torchvision.models.resnet import BasicBlock, ResNet
-from PIL import Image
-
-def default_loader(path):
-    return Image.open(path)
 
 def conv(in_planes, out_planes, kernel_size=3, stride=1, dilation=1, bias=False, transposed=False):
     if transposed:
