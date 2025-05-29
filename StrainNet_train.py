@@ -1,10 +1,10 @@
 import torch
-from StrainNet import FeatureResNet, SegResNet
+from model import FeatureResNet, SegResNet
 import torch.nn as nn
 from torch.autograd import Variable
 import torch.utils.data as data_utils
 import os
-from StrainDataset import MyDataset
+from MyDataset import MyDataset
 from torch.utils.tensorboard import SummaryWriter
 
 
@@ -35,7 +35,7 @@ def executeEpoch(EPOCH, loss_func, fcn, optimizer, train_loader, test_loader, wr
     for epoch in range(EPOCH):
         fcn.train()
         lE = 0.0
-        for step, (img, gt) in enumerate(train_loader):  # gives batch data, normalize x when iterate train_loader
+        for step, (img, dis, gt) in enumerate(train_loader):  # gives batch data, normalize x when iterate train_loader
 
             img = Variable(img).cuda()
             gt = gt.float()

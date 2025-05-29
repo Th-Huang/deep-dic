@@ -4,8 +4,8 @@ import torch.nn as nn
 from torch.autograd import Variable
 import torch.utils.data as data_utils
 import os
-from DisplacementNet import FeatureResNet, SegResNet
-from DisplacementDataset import MyDataset
+from model import FeatureResNet, SegResNet
+from MyDataset import MyDataset
 from datetime import datetime
 from torch.utils.tensorboard import SummaryWriter
 
@@ -36,7 +36,7 @@ def executeEpoch(epoch, loss_func, fcn, optimizer, train_loader, test_loader, wr
         if mode == 'train':
             fcn.train()
             lE = 0.0
-            for step, (img, gt) in enumerate(train_loader):  # gives batch data, normalize x when iterate train_loader
+            for step, (img, gt, st) in enumerate(train_loader):  # gives batch data, normalize x when iterate train_loader
                 img = Variable(img).cuda()
                 # gt=gt.unsqueeze(1).float()# batch x
                 gt = gt.float()
