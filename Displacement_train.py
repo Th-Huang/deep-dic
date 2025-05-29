@@ -44,7 +44,7 @@ def executeEpoch(epoch, loss_func, fcn, optimizer, train_loader, test_loader, wr
                 # b_y = Variable(y)#.cuda()   # batch y
                 # print(img.size())
                 # output = cnn(b_x)[0]               # cnn output
-                output = fcn(img)  # cnn output
+                output = fcn(img,mode='displacement')  # cnn output
                 # print(output.size())
                 # print(gt.size())
                 loss = loss_func(output, gt)  # cross entropy loss

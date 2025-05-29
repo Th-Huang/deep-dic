@@ -48,6 +48,7 @@ class SegResNet(nn.Module):
         super().__init__()
         self.pretrained_net = pretrained_net
         self.relu = nn.ReLU(inplace=True)
+
         self.conv3_2 = conv(1024, 512, stride=1, transposed=False)
         self.bn3_2 = bn(512)
         self.conv4 = conv(512, 512, stride=2, transposed=True)
@@ -60,14 +61,17 @@ class SegResNet(nn.Module):
         self.bn7 = bn(64)
         self.conv8 = conv(64, 64, stride=2, transposed=True)
         self.bn8 = bn(64)
-        self.conv9 = conv(64, 32, stride=2, transposed=True)
+        self.conv9_d = conv(64, 32, stride=2, transposed=True)
+        self.conv9_s = conv(64, 32, stride=1, transposed=False)
         self.bn9 = bn(32)
         self.convadd = conv(32, 16, stride=1, transposed=False)
         self.bnadd = bn(16)
-        self.conv10 = conv(16, num_classes, stride=2, kernel_size=5)
-        init.constant_(self.conv10.weight, 0)  # Zero init
+        self.conv10_d = conv(16, num_classes, stride=2, kernel_size=5)
+        self.conv10_s = conv(16, num_classes, stride=2, kernel_size=3)
+        init.constant_(self.conv10_s.weight, 0)  # Zero init
+        init.constant_(self.conv10_d.weight, 0)
 
-    def forward(self, x):
+    def forward(self, x, mode):
         x1, x2, x3, x4, x5, x6 = self.pretrained_net(x)
         x = self.relu(self.bn3_2(self.conv3_2(x6)))
         x = self.relu(self.bn4(self.conv4(x)))
@@ -75,7 +79,18 @@ class SegResNet(nn.Module):
         x = self.relu(self.bn6(self.conv6(x + x4)))
         x = self.relu(self.bn7(self.conv7(x + x3)))
         x = self.relu(self.bn8(self.conv8(x + x2)))
-        x = self.relu(self.bn9(self.conv9(x + x1)))
+        if mode == 'displacement':
+            x = self.conv9_d(x + x1)
+        elif mode == 'strain':
+            x = self.conv9_s(x + x1)
+        else:
+            raise ValueError("Mode must be either 'displacement' or 'segmentation'")
+        # x = self.relu(self.bn9(self.conv9(x + x1)))
         x = self.relu(self.bnadd(self.convadd(x)))
-        x = self.conv10(x)
+        if mode == 'displacement':
+            x = self.conv10_d(x)
+        elif mode == 'strain':
+            x = self.conv10_s(x)
+        else:
+            raise ValueError("Mode must be either 'displacement' or 'segmentation'")
         return x

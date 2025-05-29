@@ -41,6 +41,7 @@ class MyDataset(data_utils.Dataset):
 
         gt = np.asarray(gt)
         gt = gt * 100
+
         [dudx, dudy] = np.gradient(gt[:, :, 0])
         [dvdx, dvdy] = np.gradient(gt[:, :, 1])
 

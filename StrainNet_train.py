@@ -40,7 +40,7 @@ def executeEpoch(EPOCH, loss_func, fcn, optimizer, train_loader, test_loader, wr
             img = Variable(img).cuda()
             gt = gt.float()
             gt = Variable(gt).cuda()
-            output = fcn(img)  # cnn output
+            output = fcn(img,mode='strain')  # cnn output
             loss = loss_func(output, gt)  # loss
             optimizer.zero_grad()  # clear gradients for this training step
             loss.backward()  # backpropagation, compute gradients
