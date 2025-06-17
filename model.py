@@ -12,7 +12,7 @@ def conv(in_planes, out_planes, kernel_size=3, stride=1, dilation=1, bias=False,
         layer = nn.Conv2d(in_planes, out_planes, kernel_size=kernel_size, stride=stride, padding=padding,
                           dilation=dilation, bias=bias)
     if bias:
-        init.constant(layer.bias, 0)
+        init.constant_(layer.bias, 0)
     return layer
 
 # Returns 2D batch normalisation layer

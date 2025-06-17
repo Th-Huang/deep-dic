@@ -6,13 +6,12 @@ import torch.utils.data as data_utils
 import os
 from MyDataset import MyDataset
 from torch.utils.tensorboard import SummaryWriter
-
+from datetime import datetime
 
 def executeEpoch(EPOCH, loss_func, fcn, optimizer, train_loader, test_loader, writer, mode='train'):
 
-    from datetime import datetime
-    dataString = datetime.strftime(datetime.now(), '%Y_%m_%d_%H_%M_%S')
 
+    dataString = datetime.strftime(datetime.now(), '%Y_%m_%d_%H_%M_%S')
     root_result = '../output/'
     if not os.path.exists(root_result):
         os.mkdir(root_result)
