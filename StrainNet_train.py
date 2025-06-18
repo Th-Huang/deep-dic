@@ -10,7 +10,6 @@ from datetime import datetime
 
 def executeEpoch(EPOCH, loss_func, fcn, optimizer, train_loader, test_loader, writer, mode='train'):
 
-
     dataString = datetime.strftime(datetime.now(), '%Y_%m_%d_%H_%M_%S')
     root_result = '../output/'
     if not os.path.exists(root_result):

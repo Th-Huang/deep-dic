@@ -24,6 +24,7 @@ class MyDataset(data_utils.Dataset):
         self.loader = loader
 
     def __getitem__(self, index):
+
         label_x, label_y, label_z = self.imgs[index]
         img1 = self.loader(label_x)
         img_1 = ToTensor()(img1.resize((128, 128)))
