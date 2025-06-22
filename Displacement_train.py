@@ -112,15 +112,13 @@ def train():
 
     train_data = MyDataset(dataset=train_set)
     train_loader = data_utils.DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=True,
-                                         num_workers=NUM_WORKERS)
+                                            num_workers=NUM_WORKERS)
 
     test_data = MyDataset(dataset=test_set)
     test_loader = data_utils.DataLoader(dataset=test_data, batch_size=1)
 
     expPath = '../output/runs/Displacement_train/'
-
     writer = SummaryWriter(expPath)
-
     executeEpoch(EPOCH, loss_func, fcn, optimizer, train_loader, test_loader, writer,mode='train')
 
 if __name__ == '__main__':
