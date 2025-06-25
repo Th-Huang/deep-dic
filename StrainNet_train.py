@@ -31,44 +31,47 @@ def executeEpoch(EPOCH, loss_func, fcn, optimizer, train_loader, test_loader, wr
 
    # fcn.load_state_dict(torch.load(model_result + 'PATH_TO_PRETRAINED')) #comment this line if you start a new training
     for epoch in range(EPOCH):
-        fcn.train()
-        lE = 0.0
-        for step, (img, dis, gt) in enumerate(train_loader):  # gives batch data, normalize x when iterate train_loader
+        if mode == 'train':
+            fcn.train()
+            lE = 0.0
+            for step, (img, dis, gt) in enumerate(
+                    train_loader):  # gives batch data, normalize x when iterate train_loader
 
-            img = Variable(img).cuda()
-            gt = gt.float()
-            gt = Variable(gt).cuda()
-            output = fcn(img,mode='strain')  # cnn output
-            loss = loss_func(output, gt)  # loss
-            optimizer.zero_grad()  # clear gradients for this training step
-            loss.backward()  # backpropagation, compute gradients
-            optimizer.step()  # apply gradients
-            print(epoch, step, loss.data.item())
-            fileOut = open(log_result + 'log' + dataString, 'a')
-            fileOut.write(str(epoch) + '   ' + str(step) + '   ' + str(loss.data.item()) + '\n')
-            fileOut.close()
-        if epoch % 10 == 9:
-            PATH = model_result + 'param_all_strain2_' + str(epoch) + '_' + str(step)
-            torch.save(fcn.state_dict(), PATH)
-            print('finished saving checkpoints')
-
-        lE = lE / step
-        writer.add_scalar('Loss/train', lE, epoch)
-
-        LOSS_VALIDATION = 0
-        fcn.eval()
-        with torch.no_grad():
-            for step, (img, gt) in enumerate(test_loader):
                 img = Variable(img).cuda()
-                gt = gt.unsqueeze(1)  # batch x
+                gt = gt.float()
                 gt = Variable(gt).cuda()
-                output = fcn(img)
-                LOSS_VALIDATION += loss_func(output, gt)
-            LOSS_VALIDATION = LOSS_VALIDATION / step
-            fileOut2 = open(log_result + 'validation' + dataString, 'a')
-            fileOut2.write(str(epoch) + '   ' + str(step) + '   ' + str(LOSS_VALIDATION.data.item()) + '\n')
-            fileOut2.close()
-            print('validation error epoch  ' + str(epoch) + ':    ' + str(LOSS_VALIDATION) + '\n' + str(step))
+                output = fcn(img, mode='strain')  # cnn output
+                loss = loss_func(output, gt)  # loss
+                optimizer.zero_grad()  # clear gradients for this training step
+                loss.backward()  # backpropagation, compute gradients
+                optimizer.step()  # apply gradients
+                print(epoch, step, loss.data.item())
+                fileOut = open(log_result + 'log' + dataString, 'a')
+                fileOut.write(str(epoch) + '   ' + str(step) + '   ' + str(loss.data.item()) + '\n')
+                fileOut.close()
+            if epoch % 10 == 9:
+                PATH = model_result + 'param_all_strain2_' + str(epoch) + '_' + str(step)
+                torch.save(fcn.state_dict(), PATH)
+                print('finished saving checkpoints')
+
+            lE = lE / step
+            writer.add_scalar('Loss/train', lE, epoch)
+
+        if mode == 'eval':
+            LOSS_VALIDATION = 0
+            fcn.eval()
+            with torch.no_grad():
+                for step, (img, gt) in enumerate(test_loader):
+                    img = Variable(img).cuda()
+                    gt = gt.unsqueeze(1)  # batch x
+                    gt = Variable(gt).cuda()
+                    output = fcn(img)
+                    LOSS_VALIDATION += loss_func(output, gt)
+                LOSS_VALIDATION = LOSS_VALIDATION / step
+                fileOut2 = open(log_result + 'validation' + dataString, 'a')
+                fileOut2.write(str(epoch) + '   ' + str(step) + '   ' + str(LOSS_VALIDATION.data.item()) + '\n')
+                fileOut2.close()
+                print('validation error epoch  ' + str(epoch) + ':    ' + str(LOSS_VALIDATION) + '\n' + str(step))
 
 def train():
     fnet = FeatureResNet()
